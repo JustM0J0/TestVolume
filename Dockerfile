@@ -6,4 +6,6 @@ COPY . .
 
 ENV FLASK_APP=main.py
 
+ENTRYPOINT ["./entrypoint.sh"]
+
 CMD ["gunicorn", "main:app", "--bind", "0.0.0.0:5000", "--workers", "2"]
