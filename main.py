@@ -25,7 +25,6 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    bio = db.Column(db.Text, nullable=True)
 
     def __repr__(self):
         return f'<User {self.username}>'
@@ -201,9 +200,6 @@ HTML_TEMPLATE = '''
             <label>Email:</label>
             <input type="email" name="email" required placeholder="john@example.com">
 
-            <label>Bio:</label>
-            <input type="text" name="bio" required placeholder="johndoe">
-
             <input type="submit" value="Create User">
         </form>
 
@@ -214,7 +210,6 @@ HTML_TEMPLATE = '''
                 <div class="user-item">
                     <strong>{{ user.username }}</strong> ({{ user.email }})<br>
                     <small style="color: #666;">Created: {{ user.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</small>
-                    <small style="color: #666;">Bio: {{ user.bio }}</small>
                 </div>
                 {% endfor %}
             {% else %}
@@ -285,7 +280,6 @@ def index():
 def add_user():
     username = request.form.get('username')
     email = request.form.get('email')
-    bio= request.form.get('bio')
 
     # Check if user exists
     existing_user = User.query.filter_by(username=username).first()
@@ -297,7 +291,7 @@ def add_user():
         return redirect(url_for('index', message=f'Email {email} already in use!'))
 
     # Create new user
-    user = User(username=username, email=email, bio = bio)
+    user = User(username=username, email=email)
     db.session.add(user)
     db.session.commit()
 
